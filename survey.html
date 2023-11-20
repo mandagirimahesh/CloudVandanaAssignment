@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Customer Survey</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+
+        body {
+            background-color: #006aff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 95vh;
+        }
+
+        #heading {
+            margin-bottom: 5px;
+            text-align: center;
+            font-family: sans-serif;
+            color: #ffffff;
+            font-size: 40px;
+            text-shadow: 0px 2px 2px black;
+        }
+
+        #surveyForm {
+            padding: 30px;
+            height: auto;
+            width: 500px;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0px 0px 10px black;
+        }
+
+        input,
+        select {
+            width: 200px;
+            padding: 8px;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            height: 40px;
+            width: 70px;
+            border: none;
+            outline: none;
+            cursor: pointer;
+        }
+
+        #submit {
+            margin-right: 10px;
+            background-color: #006aff;
+            color: #ffffff;
+        }
+
+        #reset {
+            background-color: #ffffff;
+            color: #006aff;
+        }
+
+        #names {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .fdiv {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .radio {
+            width: auto;
+            margin-left: 10px;
+        }
+
+        #gender {
+            margin-top: 10px;
+            margin-left: 30px;
+            display: flex;
+        }
+
+        #popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            z-index: 99;
+        }
+        #close{
+            margin-top: 10px;
+            border: none;
+            outline: none;
+            background-color: #006aff;
+            color: #fff;
+            height: 30px;
+            width: 60px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="cont">
+        <h3 id="heading">Customer Survey Form</h3>
+        <form id="surveyForm">
+            <div id="names">
+                <div class="fdiv">
+                    <label for="firstName">First Name *</label>
+                    <input type="text" id="firstName" required>
+                </div>
+
+                <div class="fdiv">
+                    <label for="lastName">Last Name *</label>
+                    <input type="text" id="lastName" required>
+                </div>
+            </div>
+
+            <div id="names">
+                <div class="fdiv">
+                    <label for="dob">Date of Birth *</label>
+                    <input type="date" id="dob" required>
+                </div>
+
+                <div class="fdiv">
+                    <label for="country">Country *</label>
+                    <select id="country" required>
+                        <option value="">Select Country</option>
+                        <option value="Afghanistan">Afghanistan</option>
+                        <option value="Australia">Australia</option>
+                        <option value="Austria">Austria</option>
+                        <option value="Azerbaijan">Azerbaijan</option>
+                        <option value="Bahamas">Bahamas</option>
+                        <option value="Bahrain">Bahrain</option>
+                        <option value="Bangladesh">Bangladesh</option>
+
+                    </select>
+                </div>
+            </div>
+            <div class="fdiv">
+                <label>Gender *</label>
+                <div id="gender">
+                    <div>
+                        <input class="radio" type="radio" id="male" name="gender" value="Male" required>
+                        <label for="male">Male</label>
+                    </div>
+                    <div>
+                        <input class="radio" type="radio" id="female" name="gender" value="Female" required>
+                        <label for="female">Female</label>
+                    </div>
+                </div>
+            </div>
+
+            <div id="names">
+                <div class="fdiv">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" required>
+                </div>
+
+                <div class="fdiv">
+                    <label for="mobile">Mobile Number *</label>
+                    <input type="tel" id="mobile" required>
+
+                </div>
+            </div>
+            <div class="fdiv">
+                <label for="profession">Profession</label>
+                <input type="text" id="profession">
+            </div>
+            <div>
+                <button id="submit" class="btn" onclick="validate(e)">Submit</button>
+                <button id="reset" class="btn" type="reset">Reset</button>
+            </div>
+
+        </form>
+    </div>
+    <div id="popup">
+        <h2>Form Submission Details</h2><div id="popupContent"></div>
+        <button id="close" onclick="closePopup()">Close</button>
+        
+    </div>
+    <script>
+        let submit = document.getElementById('submit')
+        submit.addEventListener('click', (e) => {
+            e.preventDefault()
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const dob = document.getElementById('dob').value;
+            const country = document.getElementById('country').value;
+            const gender = document.querySelector('input[name="gender"]:checked');
+            const profession = document.getElementById('profession').value;
+            const email = document.getElementById('email').value;
+            const mobile = document.getElementById('mobile').value;
+
+            if (firstName && lastName && dob && country && gender && email && mobile) {
+                const popupContent = `
+            <p><strong>First Name:</strong> ${firstName}</p>
+            <p><strong>Last Name:</strong> ${lastName}</p>
+            <p><strong>Date of Birth:</strong> ${dob}</p>
+            <p><strong>Country:</strong> ${country}</p>
+            <p><strong>Gender:</strong> ${gender.value}</p>
+            <p><strong>Profession:</strong> ${profession}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Mobile Number:</strong> ${mobile}</p>`;
+
+                document.getElementById('popupContent').innerHTML = popupContent;
+                document.getElementById('popup').style.display = 'block';
+
+            } else {
+                alert('Please fill in all required fields.');
+            }
+        })
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+            window.location.reload();
+        }
+    </script>
+</body>
+
+</html>

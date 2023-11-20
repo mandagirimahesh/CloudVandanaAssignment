@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            background-color: rgb(169, 169, 169);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #cont {
+            background-color: red;
+            height: 400px;
+            width: 400px;
+        }
+
+        #res {
+            padding-left: 25px;
+            height: 80px;
+            width: 300px;
+            background-color: white;
+            font-size: 30px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            border: none;
+            outline: none;
+        }
+
+        #ac {
+            height: 80px;
+            width: 100px;
+            border: none;
+            outline: none;
+            background-color: #008f69;
+            color: #ffffff;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        #ac:hover {
+            background-color: #007a5a;
+        }
+
+        .cont2 {
+            display: flex;
+        }
+
+        .num {
+            background-color: #000015;
+            height: 80px;
+            width: 100px;
+            border: none;
+            outline: none;
+            color: #ffffff;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        .num:hover {
+            background-color: #101025;
+        }
+
+        .op {
+            background-color: grey;
+            height: 80px;
+            width: 100px;
+            border: none;
+            outline: none;
+            color: #ffffff;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        .op:hover {
+            background-color: #6b6b6b;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="cont">
+        <div class="cont2"><input type="text" id="res">
+            <input type="reset" id="ac" value="AC">
+        </div>
+        <div class="cont2">
+            <input class="num" type="button" value="9">
+            <input class="num" type="button" value="8">
+            <input class="num" type="button" value="7">
+            <input class="op" type="button" value="+">
+        </div>
+        <div class="cont2">
+            <input class="num" type="button" value="4">
+            <input class="num" type="button" value="5">
+            <input class="num" type="button" value="6">
+            <input class="op" type="button" value="-">
+        </div>
+        <div class="cont2">
+            <input class="num" type="button" value="1">
+            <input class="num" type="button" value="2">
+            <input class="num" type="button" value="3">
+            <input class="op" type="button" value="/">
+        </div>
+        <div class="cont2"><input class="num" type="button" value=".">
+            <input class="num" type="button" value="0">
+            <input class="num" type="button" value="=">
+            <input class="op" type="button" value="*">
+        </div>
+    </form>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const resultField = document.getElementById('res');
+            let currentInput = '';
+
+            function updateDisplay(value) {
+                currentInput += value;
+                resultField.value = currentInput;
+            }
+
+            document.getElementById('ac').addEventListener('click', function () {
+                currentInput = '';
+                resultField.value = '';
+            });
+
+            const buttons = document.querySelectorAll('.num, .op');
+            buttons.forEach(button => {
+                button.addEventListener('click', function () {
+                    updateDisplay(button.value);
+                });
+            });
+
+            document.querySelector('.cont2 input[value="="]').addEventListener('click', function () {
+                try {
+                    const result = calculateResult(currentInput);
+                    resultField.value = result;
+                    currentInput = result.toString();
+                } catch (error) {
+                    resultField.value = 'Error';
+                    currentInput = '';
+                }
+            });
+
+            function calculateResult(input) {
+                const operators = ['+', '-', '/', '*'];
+                const nums = input.split(/(\+|-|\*|\/)/g).map(token => token.trim());
+                let result = parseFloat(nums[0]);
+
+                for (let i = 1; i < nums.length; i += 2) {
+                    const operator = nums[i];
+                    const nextNum = parseFloat(nums[i + 1]);
+
+                    if (!operators.includes(operator) || isNaN(nextNum)) {
+                        throw new Error('Invalid input');
+                    }
+
+                    if (operator === '+') {
+                        result += nextNum;
+                    } else if (operator === '-') {
+                        result -= nextNum;
+                    } else if (operator === '*') {
+                        result *= nextNum;
+                    } else if (operator === '/') {
+                        if (nextNum === 0) {
+                            throw new Error('Division by zero');
+                        }
+                        result /= nextNum;
+                    }
+                }
+
+                return result;
+            }
+        });
+
+
+
+    </script>
+</body>
+
+</html>
